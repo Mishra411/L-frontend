@@ -2,19 +2,22 @@ import React, { useState } from "react";
 import ReportForm from "../Components/reports/ReportForm";
 import { CheckCircle, AlertTriangle, Shield, Users } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { submitReport } from "@/api/reportApi"; // <-- new API
+import { submitReport } from "@/api/reportApi"; // API function for submission
 
 export default function Home() {
   const [showSuccess, setShowSuccess] = useState(false);
 
   const handleSuccess = () => {
+    // Show success alert and scroll to the top
     setShowSuccess(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Hide the success message after 5 seconds
     setTimeout(() => setShowSuccess(false), 5000);
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-orange-50/30 to-slate-50">
+      
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-orange-600 to-red-600 text-white py-12 px-6">
         <div className="max-w-4xl mx-auto">
@@ -30,6 +33,7 @@ export default function Home() {
       </div>
 
       <div className="max-w-4xl mx-auto px-6 py-8">
+        {/* Success Alert */}
         {showSuccess && (
           <Alert className="mb-6 border-green-200 bg-green-50">
             <CheckCircle className="h-4 w-4 text-green-600" />
@@ -66,7 +70,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Report Form */}
+        {/* Report Form - Passes the submission API function and the success handler */}
         <ReportForm onSuccess={handleSuccess} submitReport={submitReport} />
 
         {/* Emergency Notice */}
