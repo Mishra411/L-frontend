@@ -7,11 +7,11 @@ import { submitReport } from "@/api/reportApi"; // API function for submission
 export default function Home() {
   const [showSuccess, setShowSuccess] = useState(false);
 
-  // Cleanup timer for success alert
+  // Automatically hide the success alert after 5 seconds
   useEffect(() => {
     if (showSuccess) {
       const timer = setTimeout(() => setShowSuccess(false), 5000);
-      return () => clearTimeout(timer);
+      return () => clearTimeout(timer); // cleanup
     }
   }, [showSuccess]);
 
