@@ -1,5 +1,3 @@
-// frontend/Pages/Dashboard.js
-
 import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getAllReports } from "@/api/reportApi"; // Assuming you have this API function
@@ -48,7 +46,7 @@ export default function Dashboard() {
   return (
     <div className="p-8 space-y-8 bg-slate-50 min-h-screen">
       
-      {/* --- CORRECTED JSX SYNTAX --- */}
+      {/* --- Dashboard Header (Fixed Syntax) --- */}
       <div 
         className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6"
       >
@@ -63,13 +61,12 @@ export default function Dashboard() {
           <span>Reports View</span>
         </div>
       </div>
-      {/* --- END CORRECTED JSX SYNTAX --- */}
       
       {/* Horizontal Rule for separation */}
       <hr className="my-6 border-slate-200" />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Left Column: Report Form */}
+        {/* Left Column: Report Form (For inspectors to quickly submit new issues) */}
         <div className="lg:col-span-1">
           <ReportForm onSuccess={handleReportSuccess} />
         </div>
