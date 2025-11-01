@@ -18,17 +18,18 @@ export default function Analytics() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-50 p-4 md:p-8">
-        <div className="max-w-7xl mx-auto">
-          <Skeleton className="h-10 w-64 mb-6" />
-          <div className="grid md:grid-cols-4 gap-6 mb-8">
-            {Array(4).fill(0).map((_, i) => (
-              <Skeleton key={i} className="h-32" />
-            ))}
+        <div className="min-h-screen bg-slate-50 p-4 md:p-8">
+          <div className="max-w-7xl mx-auto">
+            <Skeleton className="h-10 w-64 mb-6" />
+            <div className="grid md:grid-cols-4 gap-6 mb-8">
+              {Array(4).fill(0).map((_, i) => (
+                <Skeleton key={i} className="h-32" />
+              ))}
+              {/* End of Skeleton grid */}
+            </div>
           </div>
         </div>
-      </div>
-    );
+      );
   }
   
   if (isError || !stats) {
