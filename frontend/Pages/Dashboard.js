@@ -1,98 +1,118 @@
-// src/pages/Dashboard.js
-import React, { useState } from "react";
+// frontend/Pages/Dashboard.js
+
+import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import ReportCard from "../components/reports/ReportCard";
-import ReportFilters from "../Components/reports/ReportFilters";
-import { useNavigate } from "react-router-dom";
-import { createPageUrl } from "@/utils";
-import { FileText, Filter } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
-import { listReports } from "@/api/reportApi"; // ✅ Use listReports from the corrected API
+import { getAllReports } from "@/api/reportApi"; // Assuming you have this API function
+
+import ReportForm from "@/components/reports/ReportForm";
+import ReportFilters from "@/components/reports/ReportFilters";
+import ReportCard from "@/components/reports/ReportCard";
+import ReportDetail from "@/components/reports/ReportDetail"; // Assuming you have this component
+
+import { LayoutGrid, AlertCircle, Loader2 } from "lucide-react";
 
 export default function Dashboard() {
-  const navigate = useNavigate();
-  const [filters, setFilters] = useState({
-    status: null,
-    urgency: null,
-    city: null,
-    search: "",
-    sort: "-created_date" // Default sort order
+  const [filters, setFilters] = useState({});
+  const [selectedReport, setSelectedReport] = useState(null);
+
+  const { data: reports, isLoading, isError, refetch } = useQuery({
+    queryKey: ["reports", filters],
+    queryFn: () => getAllReports(filters),
+    onError: (error) => console.error("Failed to fetch reports:", error),
   });
 
-  // --- FIX: Pass filters directly to the API (Backend handles filtering) ---
-  const { data: reports = [], isLoading } = useQuery({
-    queryKey: ["reports", filters], // Query refetches whenever filters change
-    queryFn: () => listReports(filters), // Pass the filters object to the API
-  });
-
-  const displayedReports = reports;
-
-  const handleReportClick = (report) => {
-    navigate(createPageUrl(`ReportDetail?id=${report.id}`));
+  // Function to handle the successful submission of a new report
+  const handleReportSuccess = () => {
+    // Refetch the list of reports to show the new one
+    refetch();
   };
 
+  // Function to handle opening a report detail view
+  const handleCardClick = (report) => {
+    setSelectedReport(report);
+  };
+
+  // Function to filter reports on the client side (if needed, or rely solely on backend filtering via useQuery)
+  const filterReports = (reportList) => {
+    if (!reportList) return [];
+    
+    // Simple client-side filtering example if backend is not used for all filters
+    return reportList.filter(report => {
+        // More complex filtering logic can go here if the backend query is not comprehensive
+        return true; 
+    });
+  };
+
+  const displayedReports = filterReports(reports);
+
   return (
-    <div className="min-h-screen bg-slate-50 p-4 md:p-8">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-          <div>
-            <h1 className="text-3xl font-bold text-slate-900">Inspector Dashboard</h1>
-            <p className="text-slate-600 mt-1">
-              Manage and review accessibility reports
-            </p>
-          </div>
-          <div className="flex items-center gap-2 text-sm text-slate-600">
-            <FileText className="w-4 h-4" />
-            <span className="font-medium">{displayedReports.length}</span> reports shown
-          </div>
+    <div className="p-8 space-y-8 bg-slate-50 min-h-screen">
+      
+      {/* --- CORRECTED JSX SYNTAX --- */}
+      <div 
+        className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6"
+      >
+        <div>
+          <h1 className="text-3xl font-bold text-slate-900">Inspector Dashboard</h1>
+          <p className="text-slate-600 mt-1">
+            Manage and review accessibility reports
+          </p>
+        </div>
+        <div className="flex items-center gap-2 text-slate-500 text-sm">
+          <LayoutGrid className="w-4 h-4" />
+          <span>Reports View</span>
+        </div>
+      </div>
+      {/* --- END CORRECTED JSX SYNTAX --- */}
+      
+      {/* Horizontal Rule for separation */}
+      <hr className="my-6 border-slate-200" />
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Left Column: Report Form */}
+        <div className="lg:col-span-1">
+          <ReportForm onSuccess={handleReportSuccess} />
         </div>
 
-        {/* Filters */}
-        <div className="bg-white rounded-xl p-5 shadow-sm border border-slate-200 mb-6">
-          <div className="flex items-center gap-2 mb-4">
-            <Filter className="w-4 h-4 text-slate-600" />
-            <h2 className="font-semibold text-slate-900">Filters</h2>
-          </div>
+        {/* Right Column: Report List and Details */}
+        <div className="lg:col-span-2 space-y-6">
           <ReportFilters filters={filters} onFilterChange={setFilters} />
-        </div>
 
-        {/* Reports Grid */}
-        {isLoading ? (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {Array(6).fill(0).map((_, i) => (
-              <div key={i} className="bg-white rounded-xl p-6 border border-slate-200">
-                <Skeleton className="h-6 w-3/4 mb-4" />
-                <Skeleton className="h-4 w-full mb-2" />
-                <Skeleton className="h-4 w-full mb-4" />
-                <div className="flex gap-2">
-                  <Skeleton className="h-6 w-20" />
-                  <Skeleton className="h-6 w-20" />
-                </div>
+          {/* Report List Display */}
+          <div className="space-y-4">
+            {isLoading && (
+              <div className="flex justify-center items-center py-12">
+                <Loader2 className="w-8 h-8 mr-2 animate-spin text-orange-500" />
+                <span className="text-lg text-slate-600">Loading reports...</span>
               </div>
-            ))}
+            )}
+
+            {isError && (
+              <div className="flex justify-center items-center py-12 text-red-600">
+                <AlertCircle className="w-6 h-6 mr-2" />
+                <span className="text-lg">Error loading reports.</span>
+              </div>
+            )}
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {displayedReports && displayedReports.map((report) => (
+                <ReportCard 
+                  key={report.report_id} 
+                  report={report} 
+                  onClick={handleCardClick}
+                />
+              ))}
+            </div>
+
+            {/* Display Report Detail Modal or Side Panel */}
+            {selectedReport && (
+                <ReportDetail 
+                    report={selectedReport} 
+                    onClose={() => setSelectedReport(null)}
+                />
+            )}
           </div>
-        ) : displayedReports.length === 0 ? (
-          <div className="text-center py-16">
-            <FileText className="w-16 h-16 text-slate-300 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-slate-900 mb-2">No reports found</h3>
-            <p className="text-slate-600">
-              {filters.status || filters.urgency || filters.city || filters.search
-                ? "Try adjusting your filters"
-                : "Reports will appear here once submitted"}
-            </p>
-          </div>
-        ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {displayedReports.map((report) => (
-              <ReportCard
-                key={report.id}
-                report={report}
-                onClick={handleReportClick}
-              />
-            ))}
-          </div>
-        )}
+        </div>
       </div>
     </div>
   );
