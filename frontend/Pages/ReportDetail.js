@@ -1,4 +1,3 @@
-// src/pages/ReportDetail.js
 import React, { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
@@ -14,21 +13,20 @@ import { format } from "date-fns";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getReport, updateReport } from "@/api/reportApi";
 
-// --- FIX 1: Use dynamic API_BASE_URL for asset loading ---
+// Dynamic API base URL
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
 
 export default function ReportDetail() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-
   const urlParams = new URLSearchParams(window.location.search);
-  const reportId = urlParams.get('id');
+  const reportId = urlParams.get("id");
 
   const [inspectorNotes, setInspectorNotes] = useState("");
   const [status, setStatus] = useState("");
 
   const { data: report, isLoading, isError } = useQuery({
-    queryKey: ['report', reportId],
+    queryKey: ["report", reportId],
     queryFn: () => getReport(reportId),
     enabled: !!reportId,
   });
@@ -43,16 +41,23 @@ export default function ReportDetail() {
   const updateMutation = useMutation({
     mutationFn: (payload) => updateReport(reportId, payload),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['report', reportId] });
-      queryClient.invalidateQueries({ queryKey: ['reports'] });
+      queryClient.invalidateQueries({ queryKey: ["report", reportId] });
+      queryClient.invalidateQueries({ queryKey: ["reports"] });
     },
   });
 
+  // Generate full URLs
+  const fullPhotoUrl = report?.photo_url ? `${API_BASE_URL}${report.photo_url}` : null;
+  const googleMapEmbedUrl =
+    report?.latitude && report?.longitude
+      ? `https://maps.google.com/maps?q=${report.latitude},${report.longitude}&z=16&output=embed`
+      : null;
+
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-50 p-4 md:p-8">
-        <div className="max-w-4xl mx-auto">
-          <Skeleton className="h-10 w-48 mb-6" />
+      <div className="min-h-screen bg-slate-50 p-4 md:p-8 animate-pulse">
+        <div className="max-w-4xl mx-auto space-y-6">
+          <Skeleton className="h-10 w-48 mb-4 rounded-lg" />
           <div className="grid md:grid-cols-2 gap-6">
             {[...Array(2)].map((_, i) => (
               <Skeleton key={i} className="h-[400px] rounded-xl" />
@@ -65,12 +70,10 @@ export default function ReportDetail() {
 
   if (isError || !report) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-slate-900 mb-2">Report not found</h2>
-          <Button onClick={() => navigate(createPageUrl("Dashboard"))}>
-            Back to Dashboard
-          </Button>
+          <h2 className="text-2xl font-bold text-slate-900 mb-4">Report not found</h2>
+          <Button onClick={() => navigate(createPageUrl("Dashboard"))}>Back to Dashboard</Button>
         </div>
       </div>
     );
@@ -81,30 +84,20 @@ export default function ReportDetail() {
     station_name,
     station_city,
     description,
-    photo_url,
     created_date,
     created_by,
     reporter_contact,
-    latitude,
-    longitude,
     urgency_level,
   } = report;
 
-  // --- FIX 2: Generate the full, absolute URL for the photo ---
-  const fullPhotoUrl = photo_url ? `${API_BASE_URL}${photo_url}` : null;
-
-  // --- FIX 3: Generate the correct Google Maps embed URL ---
-  const googleMapEmbedUrl = latitude && longitude
-    ? `https://maps.google.com/maps?q=${latitude},${longitude}&z=16&output=embed`
-    : null;
-
   return (
     <div className="min-h-screen bg-slate-50 p-4 md:p-8">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-4xl mx-auto space-y-6">
+        {/* Back Button */}
         <Button
           variant="outline"
           onClick={() => navigate(createPageUrl("Dashboard"))}
-          className="mb-6"
+          className="flex items-center mb-6"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
           Back to Dashboard
@@ -138,8 +131,7 @@ export default function ReportDetail() {
               {fullPhotoUrl && (
                 <div className="pt-4 border-t border-slate-200">
                   <h4 className="font-medium text-slate-900 mb-3 flex items-center gap-2">
-                    <ImageIcon className="w-4 h-4" />
-                    Attached Photo
+                    <ImageIcon className="w-4 h-4" /> Attached Photo
                   </h4>
                   <a
                     href={fullPhotoUrl}
@@ -147,7 +139,7 @@ export default function ReportDetail() {
                     rel="noopener noreferrer"
                     className="block rounded-lg overflow-hidden border border-slate-200 hover:shadow-lg transition-shadow"
                   >
-                    <img src={fullPhotoUrl} alt="Issue" className="w-full h-auto" />
+                    <img src={fullPhotoUrl} alt="Issue" className="w-full h-auto object-cover" />
                   </a>
                 </div>
               )}
@@ -155,8 +147,7 @@ export default function ReportDetail() {
               {googleMapEmbedUrl && (
                 <div className="pt-4 border-t border-slate-200">
                   <h4 className="font-medium text-slate-900 mb-3 flex items-center gap-2">
-                    <MapPin className="w-4 h-4" />
-                    Location Preview
+                    <MapPin className="w-4 h-4" /> Location Preview
                   </h4>
                   <div className="w-full h-64 rounded-lg overflow-hidden border border-slate-200">
                     <iframe
@@ -166,6 +157,7 @@ export default function ReportDetail() {
                       loading="lazy"
                       allowFullScreen
                       src={googleMapEmbedUrl}
+                      className="border-0"
                     />
                   </div>
                 </div>
@@ -202,14 +194,12 @@ export default function ReportDetail() {
                 <Label htmlFor="status">Update Status</Label>
                 <Select value={status} onValueChange={setStatus}>
                   <SelectTrigger id="status">
-                    <SelectValue />
+                    <SelectValue placeholder="Select status" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Submitted">Submitted</SelectItem>
-                    <SelectItem value="Under Review">Under Review</SelectItem>
-                    <SelectItem value="In Progress">In Progress</SelectItem>
-                    <SelectItem value="Resolved">Resolved</SelectItem>
-                    <SelectItem value="Closed">Closed</SelectItem>
+                    {["Submitted", "Under Review", "In Progress", "Resolved", "Closed"].map((s) => (
+                      <SelectItem key={s} value={s}>{s}</SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
@@ -229,17 +219,15 @@ export default function ReportDetail() {
               <Button
                 onClick={() => updateMutation.mutate({ status, inspector_notes: inspectorNotes })}
                 disabled={updateMutation.isLoading}
-                className="w-full bg-orange-600 hover:bg-orange-700"
+                className="w-full bg-orange-600 hover:bg-orange-700 flex items-center justify-center gap-2"
               >
                 {updateMutation.isLoading ? (
                   <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Saving Changes...
+                    <Loader2 className="w-4 h-4 animate-spin" /> Saving Changes...
                   </>
                 ) : (
                   <>
-                    <Save className="w-4 h-4 mr-2" />
-                    Save Changes
+                    <Save className="w-4 h-4" /> Save Changes
                   </>
                 )}
               </Button>
