@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getAllReports } from "@/api/reportApi"; // Assuming you have this API function
+import { getAllReports } from "@/api/reportApi";
 
 import ReportForm from "@/components/reports/ReportForm";
 import ReportFilters from "@/components/reports/ReportFilters";
 import ReportCard from "@/components/reports/ReportCard";
-import ReportDetail from "@/components/reports/ReportDetail"; // Assuming you have this component
+import ReportDetail from "@/components/reports/ReportDetail";
 
 import { LayoutGrid, AlertCircle, Loader2 } from "lucide-react";
 
@@ -13,69 +13,59 @@ export default function Dashboard() {
   const [filters, setFilters] = useState({});
   const [selectedReport, setSelectedReport] = useState(null);
 
-  const { data: reports, isLoading, isError, refetch } = useQuery({
-    queryKey: ["reports", filters],
-    queryFn: () => getAllReports(filters),
-    onError: (error) => console.error("Failed to fetch reports:", error),
-  });
+  // --- Fetch reports using React Query ---
+  const { data: reports, isLoading, isError, refetch } = useQuery(
+    ["reports", filters],
+    () => getAllReports(filters),
+    {
+      onError: (error) => console.error("Failed to fetch reports:", error),
+    }
+  );
 
-  // Function to handle the successful submission of a new report
+  // --- Handle successful submission of a new report ---
   const handleReportSuccess = () => {
-    // Refetch the list of reports to show the new one
     refetch();
   };
 
-  // Function to handle opening a report detail view
+  // --- Handle opening a report detail view ---
   const handleCardClick = (report) => {
     setSelectedReport(report);
   };
 
-  // Function to filter reports on the client side (if needed, or rely solely on backend filtering via useQuery)
-  const filterReports = (reportList) => {
-    if (!reportList) return [];
-    
-    // Simple client-side filtering example if backend is not used for all filters
-    return reportList.filter(report => {
-        // More complex filtering logic can go here if the backend query is not comprehensive
-        return true; 
-    });
-  };
-
-  const displayedReports = filterReports(reports);
+  // --- Optional client-side filtering ---
+  const displayedReports = reports?.filter((report) => {
+    // Extend filtering logic if needed
+    return true;
+  }) || [];
 
   return (
     <div className="p-8 space-y-8 bg-slate-50 min-h-screen">
       
-      {/* --- Dashboard Header (Fixed Syntax) --- */}
-      <div 
-        className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6"
-      >
+      {/* Dashboard Header */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
         <div>
           <h1 className="text-3xl font-bold text-slate-900">Inspector Dashboard</h1>
-          <p className="text-slate-600 mt-1">
-            Manage and review accessibility reports
-          </p>
+          <p className="text-slate-600 mt-1">Manage and review accessibility reports</p>
         </div>
         <div className="flex items-center gap-2 text-slate-500 text-sm">
           <LayoutGrid className="w-4 h-4" />
           <span>Reports View</span>
         </div>
       </div>
-      
-      {/* Horizontal Rule for separation */}
+
       <hr className="my-6 border-slate-200" />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Left Column: Report Form (For inspectors to quickly submit new issues) */}
+        {/* Left Column: Report Form */}
         <div className="lg:col-span-1">
           <ReportForm onSuccess={handleReportSuccess} />
         </div>
 
-        {/* Right Column: Report List and Details */}
+        {/* Right Column: Report Filters + List */}
         <div className="lg:col-span-2 space-y-6">
           <ReportFilters filters={filters} onFilterChange={setFilters} />
 
-          {/* Report List Display */}
+          {/* Report List */}
           <div className="space-y-4">
             {isLoading && (
               <div className="flex justify-center items-center py-12">
@@ -90,23 +80,23 @@ export default function Dashboard() {
                 <span className="text-lg">Error loading reports.</span>
               </div>
             )}
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {displayedReports && displayedReports.map((report) => (
-                <ReportCard 
-                  key={report.report_id} 
-                  report={report} 
+              {displayedReports.map((report) => (
+                <ReportCard
+                  key={report.report_id || report.id}
+                  report={report}
                   onClick={handleCardClick}
                 />
               ))}
             </div>
 
-            {/* Display Report Detail Modal or Side Panel */}
+            {/* Report Detail Modal */}
             {selectedReport && (
-                <ReportDetail 
-                    report={selectedReport} 
-                    onClose={() => setSelectedReport(null)}
-                />
+              <ReportDetail
+                report={selectedReport}
+                onClose={() => setSelectedReport(null)}
+              />
             )}
           </div>
         </div>
