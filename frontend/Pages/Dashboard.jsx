@@ -13,35 +13,18 @@ export default function Dashboard() {
   const [filters, setFilters] = useState({});
   const [selectedReport, setSelectedReport] = useState(null);
 
-  // --- Fetch reports using React Query ---
   const { data: reports, isLoading, isError, refetch } = useQuery(
     ["reports", filters],
-    () => getAllReports(filters),
-    {
-      onError: (error) => console.error("Failed to fetch reports:", error),
-    }
+    () => getAllReports(filters)
   );
 
-  // --- Handle successful submission of a new report ---
-  const handleReportSuccess = () => {
-    refetch();
-  };
+  const handleReportSuccess = () => refetch();
+  const handleCardClick = (report) => setSelectedReport(report);
 
-  // --- Handle opening a report detail view ---
-  const handleCardClick = (report) => {
-    setSelectedReport(report);
-  };
-
-  // --- Optional client-side filtering ---
-  const displayedReports = reports?.filter((report) => {
-    // Extend filtering logic if needed
-    return true;
-  }) || [];
+  const displayedReports = reports || [];
 
   return (
     <div className="p-8 space-y-8 bg-slate-50 min-h-screen">
-      
-      {/* Dashboard Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
         <div>
           <h1 className="text-3xl font-bold text-slate-900">Inspector Dashboard</h1>
@@ -56,16 +39,13 @@ export default function Dashboard() {
       <hr className="my-6 border-slate-200" />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Left Column: Report Form */}
         <div className="lg:col-span-1">
           <ReportForm onSuccess={handleReportSuccess} />
         </div>
 
-        {/* Right Column: Report Filters + List */}
         <div className="lg:col-span-2 space-y-6">
           <ReportFilters filters={filters} onFilterChange={setFilters} />
 
-          {/* Report List */}
           <div className="space-y-4">
             {isLoading && (
               <div className="flex justify-center items-center py-12">
@@ -91,7 +71,6 @@ export default function Dashboard() {
               ))}
             </div>
 
-            {/* Report Detail Modal */}
             {selectedReport && (
               <ReportDetail
                 report={selectedReport}
