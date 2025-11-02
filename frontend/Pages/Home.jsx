@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import ReportForm from "@/Components/reports/ReportForm"; // fixed import
+import ReportForm from "@/Components/reports/ReportForm.jsx"; // fixed import
 import { CheckCircle, AlertTriangle, Shield, Users } from "lucide-react";
-import { Alert, AlertDescription } from "@/Components/ui/alert";
-import { submitReport } from "@/reportApi";
+import { Alert, AlertDescription } from "@/Components/ui/alert.jsx";
+import { submitReport } from "@/reportApi.jsx";
 
 export default function Home() {
   const [showSuccess, setShowSuccess] = useState(false);
