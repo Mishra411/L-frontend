@@ -1,17 +1,18 @@
+// src/pages/Home.js
 import React, { useState, useEffect } from "react";
-import ReportForm from "../Components/reports/ReportForm";
+import ReportForm from "../components/reports/ReportForm"; // ✅ fixed case
 import { CheckCircle, AlertTriangle, Shield, Users } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { submitReport } from "@/api/reportApi"; // API function for submission
+import { submitReport } from "@/api/reportApi";
 
 export default function Home() {
   const [showSuccess, setShowSuccess] = useState(false);
 
-  // Automatically hide the success alert after 5 seconds
+  // Auto-hide success alert after 5 seconds
   useEffect(() => {
     if (showSuccess) {
       const timer = setTimeout(() => setShowSuccess(false), 5000);
-      return () => clearTimeout(timer); // cleanup
+      return () => clearTimeout(timer);
     }
   }, [showSuccess]);
 
@@ -30,7 +31,7 @@ export default function Home() {
             <h1 className="text-3xl md:text-4xl font-bold">LRT SafeReport</h1>
           </div>
           <p className="text-lg text-orange-50 max-w-2xl">
-            Help improve accessibility and safety at Edmonton and Calgary LRT stations. 
+            Help improve accessibility and safety at Edmonton and Calgary LRT stations.
             Report issues quickly and track their resolution.
           </p>
         </div>
@@ -84,7 +85,7 @@ export default function Home() {
             <div>
               <h4 className="font-semibold text-red-900 mb-1">Emergency Situations</h4>
               <p className="text-sm text-red-800">
-                For immediate safety concerns or emergencies, please call 911. 
+                For immediate safety concerns or emergencies, please call 911.
                 This reporting system is for non-emergency accessibility and safety issues.
               </p>
             </div>
