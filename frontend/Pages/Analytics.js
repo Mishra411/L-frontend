@@ -1,4 +1,3 @@
-// src/pages/Analytics.js
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,7 +9,7 @@ import { getStats } from "@/api/reportApi"; // ✅ Use the dedicated getStats AP
 const COLORS = ['#f97316', '#ef4444', '#eab308', '#22c55e', '#3b82f6', '#8b5cf6'];
 
 export default function Analytics() {
-  // --- FIX 1: Fetch aggregated stats directly from the backend ---
+  // Fetch aggregated stats directly from the backend
   const { data: stats, isLoading, isError } = useQuery({
     queryKey: ['stats'],
     queryFn: getStats, // Calls the /reports/stats endpoint
@@ -25,7 +24,6 @@ export default function Analytics() {
               {Array(4).fill(0).map((_, i) => (
                 <Skeleton key={i} className="h-32" />
               ))}
-              {/* End of Skeleton grid */}
             </div>
           </div>
         </div>
@@ -33,10 +31,10 @@ export default function Analytics() {
   }
   
   if (isError || !stats) {
-     return <div className="text-center p-10">Error loading analytics data.</div>
+      return <div className="text-center p-10">Error loading analytics data.</div>
   }
 
-  // --- FIX 2: Use the pre-calculated data structure from the API ---
+  // Process the pre-calculated data structure from the API
   const categoryData = Object.entries(stats.by_category)
     .map(([name, value]) => ({ name, value }))
     .sort((a, b) => b.value - a.value);
