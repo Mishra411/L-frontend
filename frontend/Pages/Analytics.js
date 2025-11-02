@@ -4,20 +4,17 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import { FileText, AlertTriangle, CheckCircle, Clock, TrendingUp } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getStats } from "@/api/reportApi"; // ✅ Use the dedicated getStats API
+import { getStats } from "@/api/reportApi"; 
 
 const COLORS = ['#f97316', '#ef4444', '#eab308', '#22c55e', '#3b82f6', '#8b5cf6'];
 
 export default function Analytics() {
-  // Fetch aggregated stats directly from the backend
   const { data: stats, isLoading, isError } = useQuery({
     queryKey: ['stats'],
-    queryFn: getStats, // Calls the /reports/stats endpoint
+    queryFn: getStats, 
   });
 
   if (isLoading) {
-    // Wrapped the return JSX in parentheses to ensure it's treated as a single expression.
-    // This often resolves unexpected parse errors within conditional rendering blocks.
     return (
       <div className="min-h-screen bg-slate-50 p-4 md:p-8">
         <div className="max-w-7xl mx-auto">
@@ -36,7 +33,7 @@ export default function Analytics() {
       return <div className="text-center p-10">Error loading analytics data.</div>
   }
 
-  // Process the pre-calculated data structure from the API
+  // Process data from API
   const categoryData = Object.entries(stats.by_category)
     .map(([name, value]) => ({ name, value }))
     .sort((a, b) => b.value - a.value);
@@ -47,7 +44,6 @@ export default function Analytics() {
   const cityData = Object.entries(stats.by_city)
     .map(([name, value]) => ({ name, value }));
 
-  // top_stations is already pre-formatted by the backend
   const topStations = stats.top_stations.map(item => ({ 
     name: item.station, 
     value: item.count 
@@ -134,7 +130,7 @@ export default function Analytics() {
           </Card>
         </div>
 
-        {/* Charts (uses new data structure) */}
+        {/* Charts */}
         <div className="grid md:grid-cols-2 gap-6 mb-6">
           {/* Issues by Category */}
           <Card className="border-none shadow-lg">
