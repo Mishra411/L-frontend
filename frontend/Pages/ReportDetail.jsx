@@ -8,7 +8,7 @@ import { Button } from "@/Components/ui/button.jsx";
 import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card.jsx";
 import { Textarea } from "@/Components/ui/textarea.jsx";
 import { Label } from "@/Components/ui/label.jsx";
-import { Select, SelectItem } from "@/Components/ui/select.jsx";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/Components/ui/select.jsx";
 import { StatusBadge, UrgencyBadge } from "@/Components/reports/StatusBadge.jsx";
 import { ArrowLeft, MapPin, Calendar, User, Save, Loader2, Image as ImageIcon } from "lucide-react";
 import { Skeleton } from "@/Components/ui/skeleton.jsx";
