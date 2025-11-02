@@ -16,18 +16,20 @@ export default function Analytics() {
   });
 
   if (isLoading) {
+    // Wrapped the return JSX in parentheses to ensure it's treated as a single expression.
+    // This often resolves unexpected parse errors within conditional rendering blocks.
     return (
-        <div className="min-h-screen bg-slate-50 p-4 md:p-8">
-          <div className="max-w-7xl mx-auto">
-            <Skeleton className="h-10 w-64 mb-6" />
-            <div className="grid md:grid-cols-4 gap-6 mb-8">
-              {Array(4).fill(0).map((_, i) => (
-                <Skeleton key={i} className="h-32" />
-              ))}
-            </div>
+      <div className="min-h-screen bg-slate-50 p-4 md:p-8">
+        <div className="max-w-7xl mx-auto">
+          <Skeleton className="h-10 w-64 mb-6" />
+          <div className="grid md:grid-cols-4 gap-6 mb-8">
+            {Array(4).fill(0).map((_, i) => (
+              <Skeleton key={i} className="h-32" />
+            ))}
           </div>
         </div>
-      );
+      </div>
+    );
   }
   
   if (isError || !stats) {
