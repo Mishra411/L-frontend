@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getAllReports } from "@/reportApi";
+import { getAllReports } from "@/reportApi.js";
 
-import ReportForm from "@/Components/reports/ReportForm";
-import ReportFilters from "@/Components/reports/ReportFilters";
-import ReportCard from "@/Components/reports/ReportCard";
+import ReportForm from "@/Components/reports/ReportForm.jsx";
+import ReportFilters from "@/Components/reports/ReportFilters.jsx";
+import ReportCard from "@/Components/reports/ReportCard.jsx";
 import ReportDetails from "@/Pages/ReportDetails.jsx";
 
 
