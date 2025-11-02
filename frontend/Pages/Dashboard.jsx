@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getAllReports } from "@/api/reportApi";
+import { getAllReports } from "@/frontend/reportApi";
 
-import ReportForm from "@/components/reports/ReportForm";
-import ReportFilters from "@/components/reports/ReportFilters";
-import ReportCard from "@/components/reports/ReportCard";
-import ReportDetail from "@/components/reports/ReportDetail";
+import ReportForm from "@/Components/reports/ReportForm";
+import ReportFilters from "@/Components/reports/ReportFilters";
+import ReportCard from "@/Components/reports/ReportCard";
+import ReportDetail from "@Ccomponents/reports/ReportDetail";
 
 import { LayoutGrid, AlertCircle, Loader2 } from "lucide-react";
 
