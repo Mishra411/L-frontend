@@ -8,5 +8,6 @@ export default defineConfig({
     outDir: 'dist' // matches what server.js serves
     alias: {
       "@": path.resolve(__dirname, "./frontend"),
+           },
   }
 })
