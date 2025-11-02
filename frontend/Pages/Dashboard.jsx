@@ -5,7 +5,8 @@ import { getAllReports } from "@/reportApi";
 import ReportForm from "@/Components/reports/ReportForm";
 import ReportFilters from "@/Components/reports/ReportFilters";
 import ReportCard from "@/Components/reports/ReportCard";
-import ReportDetail from "@Pages/ReportDetail";
+import ReportDetails from "@/Pages/ReportDetails.jsx";
+
 
 import { LayoutGrid, AlertCircle, Loader2 } from "lucide-react";
 
