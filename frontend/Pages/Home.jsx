@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import ReportForm from "@/Components/reports/ReportForm.jsx"; // safer
+import ReportForm from "@/Components/reports/ReportForm.jsx";
 import { CheckCircle, AlertTriangle, Shield, Users } from "lucide-react";
 import { Alert, AlertDescription } from "@/Components/ui/alert.jsx";
 import { submitReport } from "@/reportApi.jsx";
