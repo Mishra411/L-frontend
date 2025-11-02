@@ -4,11 +4,11 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import App from "./App.jsx";
-import Home from "./pages/Home.jsx";
-import Dashboard from "./pages/Dashboard.jsx";
-import Analytics from "./pages/Analytics.jsx";
-import Login from "./pages/Login.jsx";
-import ReportDetail from "./pages/ReportDetail.jsx";
+import Home from "./Pages/Home.jsx";
+import Dashboard from "./Pages/Dashboard.jsx";
+import Analytics from "./Pages/Analytics.jsx";
+import Login from "./Pages/Login.jsx";
+import ReportDetail from "./Pages/ReportDetail.jsx";
 
 import "./index.css";
 
