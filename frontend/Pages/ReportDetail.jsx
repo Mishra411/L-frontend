@@ -4,15 +4,15 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Select, SelectItem } from "@/components/ui/select";
-import { StatusBadge, UrgencyBadge } from "@/components/reports/StatusBadge";
+import { Button } from "@/Components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
+import { Textarea } from "@/Components/ui/textarea";
+import { Label } from "@/Components/ui/label";
+import { Select, SelectItem } from "@/Components/ui/select";
+import { StatusBadge, UrgencyBadge } from "@/Components/reports/StatusBadge";
 import { ArrowLeft, MapPin, Calendar, User, Save, Loader2, Image as ImageIcon } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
-import { getReport, updateReport } from "@/api/reportApi";
+import { Skeleton } from "@/Components/ui/skeleton";
+import { getReport, updateReport } from "@/frontend/reportApi";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
 
