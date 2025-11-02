@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import ReportForm from "@/components/reports/ReportForm"; // fixed import
+import ReportForm from "@/Components/reports/ReportForm"; // fixed import
 import { CheckCircle, AlertTriangle, Shield, Users } from "lucide-react";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Alert, AlertDescription } from "@/Components/ui/alert";
 import { submitReport } from "@/api/reportApi";
 
 export default function Home() {
