@@ -1,17 +1,34 @@
+// src/pages/ReportDetail.jsx
 import React, { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import { createPageUrl } from "@/utils";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { StatusBadge, UrgencyBadge } from "../Components/reports/StatusBadge";
-import { ArrowLeft, MapPin, Calendar, User, Save, Loader2, Image as ImageIcon } from "lucide-react";
 import { format } from "date-fns";
-import { Skeleton } from "@/components/ui/skeleton";
-import { getReport, updateReport } from "@/api/reportApi";
+
+import { Button } from "../Components/ui/button.jsx";
+import { Card, CardContent, CardHeader, CardTitle } from "../Components/ui/card.jsx";
+import { Textarea } from "../Components/ui/textarea.jsx";
+import { Label } from "../Components/ui/label.jsx";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../Components/ui/select.jsx";
+
+import { StatusBadge, UrgencyBadge } from "../Components/reports/StatusBadge.jsx";
+import {
+  ArrowLeft,
+  MapPin,
+  Calendar,
+  User,
+  Save,
+  Loader2,
+  Image as ImageIcon,
+} from "lucide-react";
+
+import { Skeleton } from "../Components/ui/skeleton.jsx";
+import { getReport, updateReport } from "../api/reportApi.js";
 
 // Dynamic API base URL
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
@@ -19,6 +36,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000
 export default function ReportDetail() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+
   const urlParams = new URLSearchParams(window.location.search);
   const reportId = urlParams.get("id");
 
@@ -41,12 +59,11 @@ export default function ReportDetail() {
   const updateMutation = useMutation({
     mutationFn: (payload) => updateReport(reportId, payload),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["report", reportId] });
-      queryClient.invalidateQueries({ queryKey: ["reports"] });
+      queryClient.invalidateQueries(["report", reportId]);
+      queryClient.invalidateQueries(["reports"]);
     },
   });
 
-  // Generate full URLs
   const fullPhotoUrl = report?.photo_url ? `${API_BASE_URL}${report.photo_url}` : null;
   const googleMapEmbedUrl =
     report?.latitude && report?.longitude
@@ -73,7 +90,7 @@ export default function ReportDetail() {
       <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-slate-900 mb-4">Report not found</h2>
-          <Button onClick={() => navigate(createPageUrl("Dashboard"))}>Back to Dashboard</Button>
+          <Button onClick={() => navigate("/")}>Back to Dashboard</Button>
         </div>
       </div>
     );
@@ -96,7 +113,7 @@ export default function ReportDetail() {
         {/* Back Button */}
         <Button
           variant="outline"
-          onClick={() => navigate(createPageUrl("Dashboard"))}
+          onClick={() => navigate("/dashboard")}
           className="flex items-center mb-6"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
