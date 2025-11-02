@@ -1,6 +1,7 @@
+// src/pages/Login.jsx
 import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
 
-// Dynamic API base URL (Vite)
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
 
 export default function Login({ onLogin }) {
@@ -15,38 +16,30 @@ export default function Login({ onLogin }) {
     setError("");
     setLoading(true);
 
-    const endpoint = isAdmin ? "auth/admin/login" : "auth/login";
-    let fetchOptions;
-
-    if (isAdmin) {
-      const formData = new URLSearchParams();
-      formData.append("username", username);
-      formData.append("password", password);
-
-      fetchOptions = {
-        method: "POST",
-        body: formData,
-      };
-    } else {
-      fetchOptions = {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
-      };
-    }
-
     try {
-      const res = await fetch(`${API_BASE_URL}/${endpoint}`, fetchOptions);
+      const endpoint = isAdmin ? "auth/admin/login" : "auth/login";
+      const options = isAdmin
+        ? {
+            method: "POST",
+            body: new URLSearchParams({ username, password }),
+          }
+        : {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password }),
+          };
+
+      const res = await fetch(`${API_BASE_URL}/${endpoint}`, options);
 
       if (!res.ok) {
-        const errorDetail = res.statusText || "Invalid credentials or server error";
-        throw new Error(errorDetail);
+        const errText = await res.text();
+        throw new Error(errText || "Invalid credentials");
       }
 
       const data = await res.json();
       onLogin(data, isAdmin);
     } catch (err) {
-      setError(err.message);
+      setError(err.message || "Login failed");
     } finally {
       setLoading(false);
     }
@@ -71,7 +64,7 @@ export default function Login({ onLogin }) {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
-              className="w-full border border-slate-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              className="w-full border border-slate-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
           </div>
 
@@ -86,11 +79,11 @@ export default function Login({ onLogin }) {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full border border-slate-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              className="w-full border border-slate-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
           </div>
 
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center gap-2">
             <input
               type="checkbox"
               checked={isAdmin}
@@ -102,14 +95,9 @@ export default function Login({ onLogin }) {
 
           {error && <p className="text-red-600 text-sm">{error}</p>}
 
-          <button
-            type="submit"
-            disabled={loading}
-            className={`w-full py-2 px-4 rounded-lg text-white font-semibold focus:outline-none 
-              ${loading ? "bg-orange-300 cursor-not-allowed" : "bg-orange-600 hover:bg-orange-700"}`}
-          >
+          <Button type="submit" className="w-full" disabled={loading}>
             {loading ? "Logging in…" : "Login"}
-          </button>
+          </Button>
         </form>
       </div>
     </div>
