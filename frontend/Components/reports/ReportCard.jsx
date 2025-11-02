@@ -1,5 +1,5 @@
 import React from "react";
-import { StatusBadge, UrgencyBadge } from "@/components/StatusBadge";
+import { StatusBadge, UrgencyBadge } from "@/Components/StatusBadge.jsx";
 
 export default function ReportCard({ report, onClick }) {
   return (
