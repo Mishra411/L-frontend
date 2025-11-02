@@ -1,6 +1,6 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getStats } from "@/api/reportApi";
+import { getStats } from "@/reportApi";
 import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
 import { Skeleton } from "@/Components/ui/skeleton";
 import {
