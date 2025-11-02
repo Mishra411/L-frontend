@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getAllReports } from "@/frontend/reportApi";
+import { getAllReports } from "@/api/reportApi";
 
 import ReportForm from "@/Components/reports/ReportForm";
 import ReportFilters from "@/Components/reports/ReportFilters";
