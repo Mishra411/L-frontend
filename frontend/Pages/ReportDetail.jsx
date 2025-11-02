@@ -12,7 +12,7 @@ import { Select, SelectItem } from "@/Components/ui/select";
 import { StatusBadge, UrgencyBadge } from "@/Components/reports/StatusBadge";
 import { ArrowLeft, MapPin, Calendar, User, Save, Loader2, Image as ImageIcon } from "lucide-react";
 import { Skeleton } from "@/Components/ui/skeleton";
-import { getReport, updateReport } from "@/frontend/reportApi";
+import { getReport, updateReport } from "../reportApi";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
 
